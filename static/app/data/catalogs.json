@@ -1,0 +1,12 @@
+[
+	{
+		"name": "Android",
+		"uri": "Android",
+		"id": "1"
+	},
+	{
+		"name": "Apple iOS",
+		"uri": "iOS",
+		"id": "2"
+	}
+]
