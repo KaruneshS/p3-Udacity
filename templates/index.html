@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html ng-app="myapp"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Udacity P3</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bower_components/bootstrap/dist/css/bootstrap_modified.min.css') }}">
+
+    <script src="{{ url_for('static', filename='bower_components/jquery/dist/jquery.js') }}"></script>
+
+  </head>
+  <body ng-cloak>
+
+	<nav class="navbar navbar-static-top navbar-default" role="navigation">
+
+	  <div class="container">
+	  <!-- Brand and toggle get grouped for better mobile display -->
+		  <div class="navbar-header">
+		    <a class="navbar-brand" href="/login#/catalog">
+			    <span>Catalog App</span>
+		    </a>
+		  </div>
+
+		  <div class="pull-right">
+		    <ul class="nav navbar-nav navbar-right">
+		    	<li>
+		    		<div id="signInButton">
+			          <span class="g-signin"
+			            data-scope="openid email"
+			            data-clientid="890008494749-t9cr4g5hhsbrlpetnfiu2pq92kcciv9a.apps.googleusercontent.com"
+			            data-redirecturi="http://localhost:5000"
+			            data-accesstype="offline"
+			            data-cookiepolicy="single_host_origin"
+			            data-callback="signInCallback"
+			            data-approvalprompt="force">
+			          </span>
+			        </div>
+
+		    	</li>	
+		    </ul>
+		  </div>
+	  
+	  </div>
+
+	</nav>
+	<input type="hidden" id="clientId" value="">
+	<div id="result"></div>
+
+	<script>
+		function signInCallback(authResult) {
+		  if (authResult['code']) {
+		    // Hide the sign-in button now that the user is authorized
+		    document.getElementById("signInButton").style.display = "none";
+		    document.getElementById("logInFlag_").click();
+		    // Send the one-time-use code to the server, if the server responds, write a 'login successful' message to the web page and then redirect back to the main restaurants page
+		    $.ajax({
+		      type: 'POST',
+		      url: 'http://localhost:5000/gconnect?state={{STATE}}',
+		      processData: false,
+		      data: authResult['code'],
+		      contentType: 'application/octet-stream; charset=utf-8',
+		      success: function(result) {
+		    	console.log("Success");
+		      }
+		      
+		  }); } }
+
+	</script>
+
+	<div ng-view class="container"></div>
+
+	<script src="{{ url_for('static', filename='bower_components/angular/angular.js') }}"></script>
+	<script src="{{ url_for('static', filename='bower_components/angular-route/angular-route.js') }}"></script>
+	<script src="{{ url_for('static', filename='bower_components/angular-bootstrap/ui-bootstrap-tpls.js') }}"></script>
+	<script src="{{ url_for('static', filename='bower_components/angular-ui-router.js') }}"></script>
+	<script src="{{ url_for('static', filename='bower_components/angular-resource.min.js') }}"></script>
+	<script src="https://apis.google.com/js/client:platform.js?onload=start" async defer></script>
+
+	<script src="{{ url_for('static', filename='app/app.js') }}"></script>
+	<script src="{{ url_for('static', filename='app/controllers/MainController.js') }}"></script>
+	<script src="{{ url_for('static', filename='app/catalog/catalog.js') }}"></script>
+	<script src="{{ url_for('static', filename='app/catalog/controllers/catalogLatestListCtrl.js') }}"></script>
+	<script src="{{ url_for('static', filename='app/catalog/controllers/catalogListCtrl.js') }}"></script>
+	<script src="{{ url_for('static', filename='app/catalog/services/catalogServ.js') }}"></script>
+
+
+  </body>
+</html>

@@ -38,11 +38,11 @@ def showLogin():
     # return "The current session state is %s" % login_session['state']
     # print state
     # print login_session['state']
-    return jsonify(state=state), 200
+    #return jsonify(state=state), 200
+    return render_template('index.html', STATE=state)
 
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
-    login_session['state'] = 'xyz'
     # Validate state token
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
@@ -54,7 +54,7 @@ def gconnect():
     try:
         # Upgrade the authorization code into a credentials object
         oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
-        oauth_flow.redirect_uri = 'http://localhost:8082'
+        oauth_flow.redirect_uri = 'postmessage'
         print(code)
         credentials = oauth_flow.step2_exchange(code)
     except FlowExchangeError:
@@ -160,14 +160,18 @@ def gdisconnect():
 # Create category item
 @app.route('/v1/categoryItem/<int:id>/new', methods=['POST'])
 def createCategoryItem(id):
+    if 'username' not in login_session:
+        return redirect('/login')    
     newCategoryItem = CategoryItem(name=request.args.get('name'), description=request.args.get('desc'), cat_id=id)
     session.add(newCategoryItem)
     session.commit()
     return jsonify(success=True), 200
 
 # Delete category item
-@app.route('/v1/categoryItem/<int:id>/delete', methods=['POST'])
+@app.route('/v1/categoryItem/<int:id>/delete', methods=['DELETE'])
 def deleteCategoryItem(id):
+    if 'username' not in login_session:
+        return redirect('/login')
     deleteCategoryItem = session.query(CategoryItem).filter_by(id=id).one()
     session.delete(deleteCategoryItem)
     session.commit()
@@ -176,6 +180,8 @@ def deleteCategoryItem(id):
 # Edit category item
 @app.route('/v1/categoryItem/<int:id>/edit', methods=['POST'])
 def editCategoryItem(id):
+    if 'username' not in login_session:
+        return redirect('/login')
     editCategoryItem = session.query(CategoryItem).filter_by(id=id).one()
     editCategoryItem.name = request.args.get('name')
     editCategoryItem.description = request.args.get('desc')
@@ -183,11 +189,19 @@ def editCategoryItem(id):
     session.commit()
     return jsonify(success=True), 200
 
+#Get all categories
 @app.route('/v1/categories/items/JSON')
 def categoriesJSON():
     categories = session.query(Category).all()
     return jsonify(Categories=[i.serialize for i in categories])
 
+#Get limited(5) latest category items
+@app.route('/v1/categories/items/latest/JSON')
+def catItemsLatestJSON():
+    items = session.query(CategoryItem).order_by(CategoryItem.id.desc()).limit(5).all()
+    return jsonify(CategoryItems=[i.serialize for i in items])
+
+#Get category items by id
 @app.route('/v1/categories/<int:cat_id>/items/JSON')
 def catItemJSON(cat_id):
     category = session.query(Category).filter_by(id=cat_id).one()

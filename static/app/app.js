@@ -1,3 +1,5 @@
+/*Starting point of angulat app
+*/
 var app = angular.module('myapp',[
 		'ui.bootstrap', 
 		'ngRoute',
@@ -5,16 +7,16 @@ var app = angular.module('myapp',[
 		]);
 	app.config(['$routeProvider',
 		function($routeProvider){
-
+			//routing configuration
 			$routeProvider
 			   .when('/catalog', {
 			   	controller: 'CatalogLatestListCtrl',
-			   	templateUrl: 'app/templates/catalogs.html'
+			   	templateUrl: 'static/app/templates/catalogs.html'
 			  });
 
 			$routeProvider
 			   .when('/catalog/:name/:id', {
-			    templateUrl: 'app/templates/catalogItems.html',
+			    templateUrl: 'static/app/templates/catalogItems.html',
 			    controller: 'CatalogListCtrl'
 			  });
 

@@ -12,13 +12,14 @@
 			<uib-accordion>
 				<uib-accordion-group>
 			      <uib-accordion-heading>
-			        <a href="">{{latestCatItem.name}} ({{latestCatItem.parent}})</a>
+			        <a href="">{{latestCatItem.name}}</a>
+			        <button type="button" id="logInFlag_" ng-click="setLogInFlag()" style="display: none;" />
 			      </uib-accordion-heading>
-					    {{latestCatItem.desc}}
-					    <div class="pull-right" ng-show="logInFlag" style="margin-top: 30px;">
+					    {{latestCatItem.description}}
+					    <!--div class="pull-right" ng-show="logInFlag" style="margin-top: 30px;">
 							<button type="button" class="btn btn-primary btn-xs">Edit</button>
-							<button type="button" class="btn btn-primary btn-xs">Delete</button>
-						</div>
+							<button type="button" class="btn btn-primary btn-xs" ng-click="deleteItem(catItem.id)">Delete</button>
+						</div-->
 			    </uib-accordion-group>
 			</uib-accordion>
 		</div>

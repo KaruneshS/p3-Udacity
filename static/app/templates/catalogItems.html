@@ -8,7 +8,8 @@
 	<div class="col-md-7 whiteCard">
 		<header>
 			<h3>{{selectedItemName}}
-				<button type="button" class="btn btn-primary btn-xs pull-right" ng-click="" ng-show="logInFlag">Add</button>
+				<button type="button" class="btn btn-primary btn-xs pull-right" ng-click="showAddModal()" ng-show="logInFlag">Add</button>
+				<button type="button" id="logInFlag_" ng-click="setLogInFlag()" style="display: none;" />
 			</h3>
 		</header>
 		<div ng-repeat="catItem in catItems track by $index">
@@ -19,11 +20,40 @@
 			      </uib-accordion-heading>
 					    {{catItem.description}}
 					    <div class="pull-right" style="margin-top: 30px;" ng-show="logInFlag">
-							<button type="button" class="btn btn-primary btn-xs">Edit</button>
-							<button type="button" class="btn btn-primary btn-xs">Delete</button>
+							<button type="button" class="btn btn-primary btn-xs" ng-click="editItem(catItem.id, catItem.name, catItem.description)">Edit</button>
+							<button type="button" class="btn btn-primary btn-xs" ng-click="deleteItem(selectedItemId, catItem.id)">Delete</button>
 						</div>
 			    </uib-accordion-group>
 			</uib-accordion>
 		</div>
 	</div>
+
 </div>
+<!-- Modal -->
+<ng-form id="addModal_" name="addModal_" class="modal" role="dialog" style="display: none;">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Add Item in {{selectedItemName}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+        	<h4 style="margin-right: 5px;">Name:</h4>
+        	<input id="name_" type="text" ng-model="name_" style="width:100%;" required></input>
+        </div>
+        <div class="row">
+        	<h4 style="right; margin-right: 5px;">Description:</h4>
+        	<textarea id="desc_" type="textarea" style="width:100%;" ng-model="desc_"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" ng-disabled="addModal_.$invalid" ng-click="addNewCatalogItem(selectedItemId)" ng-hide="editFlag">OK</button>
+        <button class="btn btn-primary" ng-disabled="addModal_.$invalid" ng-click="updateCatalogItem(eId_)" ng-show="editFlag">Update</button>
+        <button class="btn btn-warning" ng-click="hideAddModal()">Cancel</button>
+      </div>
+    </div>
+
+  </div>
+</ng-form>
